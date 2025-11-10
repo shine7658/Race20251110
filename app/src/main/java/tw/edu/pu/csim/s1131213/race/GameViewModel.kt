@@ -21,6 +21,10 @@ class GameViewModel: ViewModel(){
     var circleX by mutableStateOf(0f)
 
     var circleY by mutableStateOf(0f)
+
+    var score by mutableStateOf(0f)
+        private set
+
     // 設定螢幕寬度與高度
     fun SetGameSize(w: Float, h: Float) {
         screenWidthPx = w
@@ -39,6 +43,7 @@ class GameViewModel: ViewModel(){
 
                 if (circleX >= screenWidthPx - 100){
                     circleX = 100f
+                    score += 1
                 }
             }
         }
