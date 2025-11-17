@@ -16,14 +16,19 @@ class GameViewModel: ViewModel(){
     var screenHeightPx by mutableStateOf(0f)
         private set
 
-    var gameRunning by mutableStateOf(true)
+    // (修改 1) gameRunning 預設為 false
+    var gameRunning by mutableStateOf(false)
 
     var circleX by mutableStateOf(0f)
-
     var circleY by mutableStateOf(0f)
 
-    //val horse = Horse()
     val horses = mutableListOf<Horse>()
+
+    // (修改 2) 移除 'winner'，改用 'latestWinner' 來顯示訊息
+    // var winner by mutableStateOf(0) // <-- 刪除
+    var latestWinner by mutableStateOf(0) // <-- 新增 (0 = 尚未有贏家)
+        private set
+
     var score by mutableStateOf(0f)
         private set
 
@@ -43,7 +48,8 @@ class GameViewModel: ViewModel(){
         circleY = screenHeightPx - 100f
 
         viewModelScope.launch {
-            while (gameRunning) { // 每0.1秒循環
+            // (修改 3) 迴圈條件不再檢查 winner
+            while (gameRunning) {
                 delay(100)
                 circleX += 10
 
@@ -52,14 +58,26 @@ class GameViewModel: ViewModel(){
                     score += 1
                 }
 
+                // (修改 4) 勝利/重置邏輯 (核心修改)
                 for(i in 0..2){
                     horses[i].Run()
-                    if (horses[i].HorseX >= screenWidthPx - 300){
-                        horses[i].HorseX = 0
+
+                    // (A) 檢查勝利
+                    // 終點線 (馬的寬度是 200)
+                    if (horses[i].HorseX >= screenWidthPx - 200){
+
+                        // (B) 設定最新贏家 (GameScreen 會顯示)
+                        latestWinner = i + 1
+
+                        // (C) "不要停止" -> 立刻重置 "所有" 馬匹
+                        for (h in horses) {
+                            h.Reset()
+                        }
+
+                        // (D) 跳出 for 迴圈，因為比賽已重置
+                        break
                     }
                 }
-
-
             }
         }
     }
@@ -69,5 +87,6 @@ class GameViewModel: ViewModel(){
         circleY += y
     }
 
-
+    // (修改 5) acknowledgeWin() 已不再需要，可以刪除
+    // fun acknowledgeWin() { ... } // <-- 刪除
 }
