@@ -26,7 +26,14 @@ import androidx.window.embedding.EmbeddingBounds
 @Composable
 fun GameScreen(message: String,gameViewModel: GameViewModel) {
 
-    val imageBitmap = ImageBitmap.imageResource(R.drawable.horse0)
+    //val imageBitmap = ImageBitmap.imageResource(R.drawable.horse0)
+    val imageBitmaps = listOf(
+        ImageBitmap.imageResource(R.drawable.horse0),
+        ImageBitmap.imageResource(R.drawable.horse1),
+        ImageBitmap.imageResource(R.drawable.horse2),
+        ImageBitmap.imageResource(R.drawable.horse3)
+    )
+
 
 
     Box(modifier = Modifier
@@ -59,8 +66,10 @@ fun GameScreen(message: String,gameViewModel: GameViewModel) {
             )
 
             drawImage(
-                image = imageBitmap,
-                dstOffset = IntOffset(0,100),
+                image = imageBitmaps[gameViewModel.horse.HorseNo],
+                dstOffset = IntOffset(
+                    gameViewModel.horse.HorseX,
+                    gameViewModel.horse.HorseY),
                 dstSize = IntSize(200,200)
             )
         }

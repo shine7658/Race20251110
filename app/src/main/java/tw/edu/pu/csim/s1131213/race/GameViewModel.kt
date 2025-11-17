@@ -22,6 +22,7 @@ class GameViewModel: ViewModel(){
 
     var circleY by mutableStateOf(0f)
 
+    val horse = Horse()
     var score by mutableStateOf(0f)
         private set
 
@@ -44,6 +45,11 @@ class GameViewModel: ViewModel(){
                 if (circleX >= screenWidthPx - 100){
                     circleX = 100f
                     score += 1
+                }
+
+                horse.Run()
+                if (horse.HorseX >= screenWidthPx - 300){
+                    horse.HorseX = 0
                 }
             }
         }
